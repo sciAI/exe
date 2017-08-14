@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jupyter notebooks validator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+
+<body>
+    <div class="container mt-4 mb-4">
+        <h1>Results of analysis</h1>
+        {% for paper in papers %}
+            <h4>Paper: {{paper.paper_url}}</h4>
+            <h6>URL: <a href="{{paper.paper_url}}">Paper URL</a></h6>
+            {% if not paper.notebooks %}
+            <p>No notebooks was found for this paper</p>
+            {% endif %}
+            {% for notebook in paper.notebooks %}
+            <p><b>Notebook URL:</b> <a href="{{notebook.url}}">Notebook URL</a></p>
+            <p>
+                {% if notebook.is_failed %}
+                    <b style="color:red"> Failed:  True </b>
+                {% else %} 
+                    <b style="color:green"> Failed:  False </b>
+                {% endif %}
+            </p>
+            <p>
+                <b>Message:</b>
+                <br>
+                {{notebook.message|safe}}
+            </p>
+            <hr>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+
+</html>

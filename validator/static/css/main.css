@@ -1,0 +1,23 @@
+.centered-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+}
+
+.custom-file-control {
+    text-align: left;
+}
+.custom-file-control:before {
+    content: "Browse";
+}
+
+.custom-file-control:after {
+    content: attr(data-content);
+}
+
+.btn,
+.custom-file-input {
+    cursor: pointer;
+}

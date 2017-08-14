@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jupyter notebooks validator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <style>
+        .input_area {
+            border: 1px solid #bbb;
+            border-radius: 3px;
+        }
+        iframe {
+            max-width: 100%;
+        }
+        .output_subarea {
+            border: 1px solid #ddd;
+            padding: 5px;
+        }
+        .output_error pre {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4 mb-4">
+        {{body|safe}}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+
+</html>

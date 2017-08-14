@@ -1,0 +1,4 @@
+py2env/
+py3env/
+testing/
+validator/static/uploads/
