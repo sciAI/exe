@@ -1,5 +1,6 @@
-"""This module includes all things related to app config"""
-
+"""
+    App config
+"""
 
 class Configuration(object):
     """Class with different config variables"""
