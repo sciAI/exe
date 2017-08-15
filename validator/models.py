@@ -211,7 +211,7 @@ class Notebook(db.Document):
             new_notebook.get_id(),
             'Start process notebook'
         )
-        notebook_file = open(notebook_path)
+        notebook_file = io.open(notebook_path, encoding='utf-8')
         notebook_content = nbformat.read(notebook_file, as_version=4)
         kernel_name = notebook_content['metadata']['kernelspec']['name']
         status, tmp_log = install_dependencies(str(notebook_content), kernel_name)
@@ -267,7 +267,7 @@ class Notebook(db.Document):
                 # new_notebook.html_content = body
                 # new_notebook.html_resources = resources
                 new_notebook.save()
-                with io.open(notebook_out_path, mode='wt') as f:
+                with io.open(notebook_out_path, mode='wt', encoding='utf-8') as f:
                     nbformat.write(notebook_content, f)
         return new_notebook.get_id()
 
