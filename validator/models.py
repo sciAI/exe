@@ -237,9 +237,9 @@ class Notebook(db.Document):
             is_failed = False
         except Exception as e:
             message = str(e)
-            kernel_name = None if 'kernel_name' not in locals()
+            kernel_name = None if 'kernel_name' not in locals() else kernel_name
             is_failed = True
-            notebook_content = False if 'notebook_content' not in locals()
+            notebook_content = False if 'notebook_content' not in locals() else notebook_content
         finally:
             new_notebook.kernel = kernel_name
             new_notebook.message = message
