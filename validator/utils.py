@@ -42,22 +42,25 @@ def install_dependencies(nb_string, kernel_name):
     """
         Install necessary dependencies to run notebook
     """
+    # log string
+    log_string = ''
     # regex to find imports
     modules = re.findall(r'(?<!#)\s?(?<=\\n)(import|from)\s(\w*)', nb_string)
     if kernel_name == 'python2':
-        print('Install dependencies for Python2')
+        log_string += 'Install dependencies for Python2\n'
         for module in modules:
-            print('Try to install: {0}'.format(module[1]))
+            log_string += 'Try to install: {0}\n'.format(module[1])
             try:
                 pip.main(['install', module[1]])
             except Exception as e:
-                return False, str(e)
+                log_string += 'Error occured: {0}\n'.format(str(e))
+                return False, log_string
     elif kernel_name == 'python3':
-        print('Install dependencies for Python3')
+        log_string += 'Install dependencies for Python3\n'
         for module in modules:
-            print('Try to install: {0}'.format(module[1]))
+            log_string += 'Try to install: {0}\n'.format(module[1])
             if is_module_installed(module[1]):
-                print('Module: {0} installed'.format(module[1]))
+                log_string += 'Module: {0} installed\n'.format(module[1])
                 continue
             try:
                 subprocess.check_output(
@@ -67,8 +70,9 @@ def install_dependencies(nb_string, kernel_name):
                     shell=True
                 )
             except Exception as e:
-                return False, str(e)
-    return True, modules
+                log_string += 'Error occured: {0}\n'.format(str(e))
+                return False, log_string
+    return True, log_string
 
 
 def is_module_installed(module_name):

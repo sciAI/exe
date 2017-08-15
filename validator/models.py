@@ -212,10 +212,18 @@ class Notebook(db.Document):
             'Start process notebook'
         )
         try:
-            notebook_file = io.open(notebook_path)
+            notebook_file = open(notebook_path)
             notebook_content = nbformat.read(notebook_file, as_version=4)
             kernel_name = notebook_content['metadata']['kernelspec']['name']
-            install_dependencies(str(notebook_content), kernel_name)
+            status, tmp_log = install_dependencies(str(notebook_content), kernel_name)
+
+            Log.write_log(
+                None,
+                paper_id,
+                new_notebook.get_id(),
+                tmp_log
+            )
+
             ep = ExecutePreprocessor(
                 timeout=150,
                 kernel_name=kernel_name
@@ -228,9 +236,9 @@ class Notebook(db.Document):
             is_failed = False
         except Exception as e:
             message = str(e)
-            kernel_name = None
+            kernel_name = None if kernel_name not in locals()
             is_failed = True
-            notebook_content = False
+            notebook_content = False if notebook_content not in locals()
         finally:
             new_notebook.kernel = kernel_name
             new_notebook.message = message
