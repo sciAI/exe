@@ -214,6 +214,9 @@ class Notebook(db.Document):
         try:
             notebook_file = io.open(notebook_path, encoding='utf-8')
             notebook_content = nbformat.read(notebook_file, as_version=4)
+            # clear outputs
+            notebook_content = Notebook.clear_outputs(notebook_content)
+            # get kernel name
             kernel_name = notebook_content['metadata']['kernelspec']['name']
             status, tmp_log = install_dependencies(
                 str(notebook_content), kernel_name)
@@ -226,7 +229,7 @@ class Notebook(db.Document):
             )
 
             ep = ExecutePreprocessor(
-                timeout=150,
+                timeout=600,
                 kernel_name=kernel_name
             )
             ep.preprocess(
@@ -270,6 +273,20 @@ class Notebook(db.Document):
                 with io.open(notebook_out_path, mode='wt', encoding='utf-8') as f:
                     nbformat.write(notebook_content, f)
         return new_notebook.get_id()
+
+    @staticmethod
+    def clear_outputs(notebook, clear_prompt_numbers=True):
+        """
+            Clears the output of all cells in an ipython notebook
+        """
+        for cell in notebook.cells:
+            if cell.get('cell_type', None) == 'code':
+                cell.outputs = []
+                if clear_prompt_numbers is True:
+                    cell.execution_count = None
+                    cell.pop('prompt_number', None)
+
+        return notebook
 
 class Log(db.Document):
     """
