@@ -212,7 +212,7 @@ class Notebook(db.Document):
             'Start process notebook'
         )
         try:
-            notebook_file = open(notebook_path)
+            notebook_file = io.open(notebook_path)
             notebook_content = nbformat.read(notebook_file, as_version=4)
             kernel_name = notebook_content['metadata']['kernelspec']['name']
             install_dependencies(str(notebook_content), kernel_name)
@@ -230,6 +230,7 @@ class Notebook(db.Document):
             message = str(e)
             kernel_name = None
             is_failed = True
+            notebook_content = False
         finally:
             new_notebook.kernel = kernel_name
             new_notebook.message = message

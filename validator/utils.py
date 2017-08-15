@@ -61,7 +61,8 @@ def install_dependencies(nb_string, kernel_name):
                 continue
             try:
                 subprocess.check_output(
-                    ['/mnt/c/dev/jupyter-testing/py3env/bin/pip install {0}'.format(
+                    ['{0} install {1}'.format(
+                        app.config['PYTHON3_PIP'],
                         module[1])],
                     shell=True
                 )
@@ -76,7 +77,8 @@ def is_module_installed(module_name):
     """
     try:
         output = subprocess.check_output(
-            ["/mnt/c/dev/jupyter-testing/py3env/bin/python -c 'import pkgutil; print(1 if pkgutil.find_loader(\"{0}\") else 0)'".format(
+            ["{0} -c 'import pkgutil; print(1 if pkgutil.find_loader(\"{1}\") else 0)'".format(
+                app.config['PYTHON3_PYTHON'],
                 module_name)],
             shell=True
         )
