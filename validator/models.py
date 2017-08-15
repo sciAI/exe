@@ -211,12 +211,12 @@ class Notebook(db.Document):
             new_notebook.get_id(),
             'Start process notebook'
         )
-        notebook_file = io.open(notebook_path, encoding='utf-8')
-        notebook_content = nbformat.read(notebook_file, as_version=4)
-        kernel_name = notebook_content['metadata']['kernelspec']['name']
-        status, tmp_log = install_dependencies(str(notebook_content), kernel_name)
         try:
-            
+            notebook_file = io.open(notebook_path, encoding='utf-8')
+            notebook_content = nbformat.read(notebook_file, as_version=4)
+            kernel_name = notebook_content['metadata']['kernelspec']['name']
+            status, tmp_log = install_dependencies(
+                str(notebook_content), kernel_name)
 
             Log.write_log(
                 None,
