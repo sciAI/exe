@@ -197,7 +197,7 @@ class Notebook(db.Document):
         new_notebook = Notebook(
             url=notebook_url,
             filename=notebook_filename,
-            path=get_path_to_file(''),
+            path=get_path_to_file(notebook_filename),
             paper_id=paper_id
         )
         new_notebook.save()
@@ -211,11 +211,12 @@ class Notebook(db.Document):
             new_notebook.get_id(),
             'Start process notebook'
         )
+        notebook_file = open(notebook_path)
+        notebook_content = nbformat.read(notebook_file, as_version=4)
+        kernel_name = notebook_content['metadata']['kernelspec']['name']
+        status, tmp_log = install_dependencies(str(notebook_content), kernel_name)
         try:
-            notebook_file = open(notebook_path)
-            notebook_content = nbformat.read(notebook_file, as_version=4)
-            kernel_name = notebook_content['metadata']['kernelspec']['name']
-            status, tmp_log = install_dependencies(str(notebook_content), kernel_name)
+            
 
             Log.write_log(
                 None,
