@@ -63,12 +63,12 @@ def install_dependencies(nb_string, kernel_name):
                 log_string += 'Module: {0} installed\n'.format(module[1])
                 continue
             try:
-                subprocess.check_output(
-                    ['{0} install {1}'.format(
-                        app.config['PYTHON3_PIP'],
-                        module[1])],
-                    shell=True
-                )
+                process = subprocess.Popen([app.config['PYTHON3_PIP'], 'install', module[1]],
+                           stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT)
+                returncode = process.wait()
+                log_string += 'PIP install returned: {0}\n'.format(returncode)
+                log_string += process.stdout.read()
             except Exception as e:
                 log_string += 'Error occured: {0}\n'.format(str(e))
                 return False, log_string
