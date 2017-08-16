@@ -84,8 +84,6 @@ class List(db.Document):
 
         # read the file with list of links
         urls_to_papers = read_csv_file(get_path_to_file(self.filename))
-        # remove spaces from urls
-        urls_to_papers = [x.strip() for x in urls_to_papers]
 
         Log.write_log(
             self.get_id(),

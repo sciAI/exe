@@ -49,7 +49,10 @@ def read_csv_file(path_to_file):
         # skip header
         next(content, None)
         for row in content:
-            urls.append(row[0])
+            if not row or row[0].isspace():
+                continue
+            possible_url = row[0].strip()
+            urls.append(possible_url)
     return urls
 
 def install_dependencies(nb_string, kernel_name):
