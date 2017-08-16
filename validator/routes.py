@@ -94,6 +94,7 @@ def render_results(list_id):
         for notebook in notebooks:
             tmp_list.append(
                 {
+                    "id": notebook.get_id(),
                     "filename": notebook.filename,
                     "url": notebook.url,
                     "is_failed": notebook.is_failed,
@@ -105,14 +106,3 @@ def render_results(list_id):
             "notebooks": tmp_list
         })
     return render_template('results.html', papers=results)
-
-
-@app_routes.route('/notebook/<notebook_id>', methods=['GET'])
-def render_notebook(notebook_id):
-    """
-        Render results of execution
-    """
-    notebook = Notebook.objects(id=notebook_id).first()
-    if notebook:
-        return notebook.html_content
-    return 'No notebook with specified ID'
