@@ -1,7 +1,16 @@
+# Virtualenvs
 py2env/
 py3env/
+
+# Directories
 testing/
 validator/static/uploads/
-*.pyc
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Configs 
 devconfig.py
 config.py

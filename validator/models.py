@@ -219,7 +219,9 @@ class Notebook(db.Document):
             # get kernel name
             kernel_name = notebook_content['metadata']['kernelspec']['name']
             status, tmp_log = install_dependencies(
-                str(notebook_content), kernel_name)
+                str(notebook_content),
+                kernel_name
+            )
 
             Log.write_log(
                 None,
