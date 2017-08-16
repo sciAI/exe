@@ -1,0 +1,10 @@
+bs4==0.0.1
+Flask==0.12.2
+flask-mongoengine==0.9.3
+ipykernel==4.6.1
+ipython==5.4.1
+ipython-genutils==0.2.0
+jupyter-client==5.1.0
+mongoengine==0.13.0
+nbconvert==5.2.1
+nbformat==4.3.0
