@@ -95,8 +95,6 @@ def is_module_installed(module_name, kernel_name):
                     module_name)],
                 shell=True
             )
-        if output.strip() == '1':
-            return True
         elif kernel_name == 'python3':
             output = subprocess.check_output(
                 ["{0} -c 'import pkgutil; print(1 if pkgutil.find_loader(\"{1}\") else 0)'".format(
@@ -104,8 +102,8 @@ def is_module_installed(module_name, kernel_name):
                     module_name)],
                 shell=True
             )
-            if output.strip() == '1':
-                return True
+        if output.strip() == '1':
+            return True
     except subprocess.CalledProcessError as e:
         print(str(e))
         return False
