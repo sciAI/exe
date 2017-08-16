@@ -86,7 +86,10 @@ def render_results(list_id):
     """
     papers = Paper.objects(list_id=list_id)
     print('Found {0} processed papers'.format(len(papers)))
-    results = []
+    results = {
+        "list_id": list_id, 
+        "papers": []
+    }
     for paper in papers:
         notebooks = Notebook.objects(paper_id=paper.get_id())
         print('Found {0} processed notebooks'.format(len(notebooks)))
@@ -101,8 +104,8 @@ def render_results(list_id):
                     "message": re.sub(r'(\\n)+', '\n', notebook.message).replace('\\n', '<br>')
                 }
             )
-        results.append({
+        results["papers"].append({
             "paper_url": paper.paper_url,
             "notebooks": tmp_list
         })
-    return render_template('results.html', papers=results)
+    return render_template('results.html', results=results)

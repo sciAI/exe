@@ -19,7 +19,7 @@ from nbconvert import HTMLExporter
 
 from validator import db
 from validator.utils import get_path_to_file, install_dependencies, \
-    get_unique_appendix, is_allowed_file
+    get_unique_appendix, is_allowed_file, read_csv_file
 
 
 class List(db.Document):
@@ -83,9 +83,7 @@ class List(db.Document):
         )
 
         # read the file with list of links
-        urls_to_papers = []
-        with open(get_path_to_file(self.filename)) as f:
-            urls_to_papers = f.readlines()
+        urls_to_papers = read_csv_file(get_path_to_file(self.filename))
         # remove spaces from urls
         urls_to_papers = [x.strip() for x in urls_to_papers]
 
@@ -128,9 +126,9 @@ class Paper(db.Document):
             res = re.findall(r'articles\/(.*)\/?', self.paper_url)
             if res:
                 pub_id = res[0]
-                paper_url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id={0}'.format(
+                self.paper_url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id={0}'.format(
                     pub_id)
-        r = urllib.urlopen(paper_url).read()
+        r = urllib.urlopen(self.paper_url).read()
         soup = BeautifulSoup(r)
 
         notebooks_urls = []
@@ -186,6 +184,14 @@ class Notebook(db.Document):
         elif notebook_url.find('nbviewer.jupyter.org/github') > -1:
             notebook_url = notebook_url.replace(
                 'nbviewer.jupyter.org/github',
+                'raw.githubusercontent.com'
+            ).replace(
+                '/blob/',
+                '/'
+            )
+        elif notebook_url.find('nbviewer.ipython.org/github') > -1:
+            notebook_url = notebook_url.replace(
+                'nbviewer.ipython.org/github',
                 'raw.githubusercontent.com'
             ).replace(
                 '/blob/',

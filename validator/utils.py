@@ -7,6 +7,7 @@ import uuid
 import re
 import pip
 import subprocess
+import csv
 
 from validator import app
 
@@ -37,6 +38,19 @@ def get_path_to_file(filename):
         return app.config['UPLOAD_FOLDER']
     return os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
+
+def read_csv_file(path_to_file):
+    """
+        Simple reader for both txt and csv files
+    """
+    urls = []
+    with open(path_to_file, 'rb') as csvfile:
+        content = csv.reader(csvfile, delimiter=',')
+        # skip header
+        next(content, None)
+        for row in content:
+            urls.append(row[0])
+    return urls
 
 def install_dependencies(nb_string, kernel_name):
     """
