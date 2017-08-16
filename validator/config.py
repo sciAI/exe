@@ -14,6 +14,7 @@ class Configuration(object):
     PYTHON3_PIP = '/opt/jupyter-testing/py3env/bin/pip'
     PYTHON2_PIP = '/opt/jupyter-testing/py2env/bin/pip'
     PYTHON3_PYTHON = '/opt/jupyter-testing/py3env/bin/python'
+    PYTHON2_PYTHON = '/opt/jupyter-testing/py2env/bin/python'
 
     MONGODB_SETTINGS = [
         {
