@@ -12,6 +12,7 @@ class Configuration(object):
     UPLOAD_FOLDER = '/opt/jupyter-testing/validator/static/uploads'
     ALLOWED_EXTENSIONS = set(['csv', 'txt'])
     PYTHON3_PIP = '/opt/jupyter-testing/py3env/bin/pip'
+    PYTHON2_PIP = '/opt/jupyter-testing/py2env/bin/pip'
     PYTHON3_PYTHON = '/opt/jupyter-testing/py3env/bin/python'
 
     MONGODB_SETTINGS = [

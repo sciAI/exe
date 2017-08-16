@@ -50,8 +50,16 @@ def install_dependencies(nb_string, kernel_name):
         log_string += 'Install dependencies for Python2\n'
         for module in modules:
             log_string += 'Try to install: {0}\n'.format(module[1])
+            if is_module_installed(module[1], kernel_name):
+                log_string += 'Module: {0} installed\n'.format(module[1])
+                continue
             try:
-                pip.main(['install', module[1]])
+                process = subprocess.Popen([app.config['PYTHON2_PIP'], 'install', module[1]],
+                           stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT)
+                returncode = process.wait()
+                log_string += 'PIP install returned: {0}\n'.format(returncode)
+                log_string += process.stdout.read()
             except Exception as e:
                 log_string += 'Error occured: {0}\n'.format(str(e))
                 return False, log_string
@@ -59,7 +67,7 @@ def install_dependencies(nb_string, kernel_name):
         log_string += 'Install dependencies for Python3\n'
         for module in modules:
             log_string += 'Try to install: {0}\n'.format(module[1])
-            if is_module_installed(module[1]):
+            if is_module_installed(module[1], kernel_name):
                 log_string += 'Module: {0} installed\n'.format(module[1])
                 continue
             try:
@@ -75,19 +83,29 @@ def install_dependencies(nb_string, kernel_name):
     return True, log_string
 
 
-def is_module_installed(module_name):
+def is_module_installed(module_name, kernel_name):
     """
         Check if module with specified name already installed
     """
     try:
-        output = subprocess.check_output(
-            ["{0} -c 'import pkgutil; print(1 if pkgutil.find_loader(\"{1}\") else 0)'".format(
-                app.config['PYTHON3_PYTHON'],
-                module_name)],
-            shell=True
-        )
+        if kernel_name == 'python2':
+            output = subprocess.check_output(
+                ["{0} -c 'import pkgutil; print(1 if pkgutil.find_loader(\"{1}\") else 0)'".format(
+                    app.config['PYTHON2_PYTHON'],
+                    module_name)],
+                shell=True
+            )
         if output.strip() == '1':
             return True
+        elif kernel_name == 'python3':
+            output = subprocess.check_output(
+                ["{0} -c 'import pkgutil; print(1 if pkgutil.find_loader(\"{1}\") else 0)'".format(
+                    app.config['PYTHON3_PYTHON'],
+                    module_name)],
+                shell=True
+            )
+            if output.strip() == '1':
+                return True
     except subprocess.CalledProcessError as e:
         print(str(e))
         return False
