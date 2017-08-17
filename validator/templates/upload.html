@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Upload new File</title>
+        <title>Check executability of the research paper code</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
         <link rel="stylesheet" href="/static/css/main.css">
     </head>
     <body>
         <div class="container centered-container">
-            <h1>Jupyter notebooks validator</h1>
-            <form class="mt-4 mb-4" method="post" enctype="multipart/form-data">
-                <div class="form-group {% if error %}has-danger{% else %}has-success{% endif %}">
-                    <label class="custom-file">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3 mt-4 mb-4">
+                    <h1>Check executability of the research paper code</h1>
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <textarea class="form-control" placeholder="Paper's URL/DOI or link to the notebook (enter next paper from the next line)"
+                                id="text" name="text" rows="4"></textarea>
+                        </div>
+                        <div class="form-group {% if error %}has-danger{% else %}has-success{% endif %}">
+
+                            <label class="custom-file">
                         <input type="file" name="file" id="file" class="custom-file-input">
-                        <span class="custom-file-control" data-content="Choose file..."></span>
+                        <span class="custom-file-control" data-content="or upload list of papers in .csv/.txt format"></span>
                     </label>
-                    <small class="form-text text-muted">You can upload CSV (TXT) file with links to publications</small>
-                    <button type="submit" class="btn btn-primary mt-4">Upload file</button>
-                    <div class="form-control-feedback">{{error}}</div>
+                            <button type="submit" class="btn btn-primary mt-4">Run test</button>
+                            <div class="form-control-feedback">{{error}}</div>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+            
         </div>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>

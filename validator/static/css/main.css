@@ -21,3 +21,7 @@
 .custom-file-input {
     cursor: pointer;
 }
+
+.custom-file {
+    width: 100%;
+}

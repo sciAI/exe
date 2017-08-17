@@ -23,19 +23,20 @@ def is_allowed_file(filename):
            ) in app.config['ALLOWED_EXTENSIONS']
 
 
-def get_unique_appendix():
+def generate_id():
     """
         Generate uniquer appendix value
     """
     return uuid.uuid4().hex
 
 
+def get_uploads_path():
+    return app.config['UPLOAD_FOLDER']
+
 def get_path_to_file(filename):
     """
         Returns path fo file in uploads by filename
     """
-    if not filename:
-        return app.config['UPLOAD_FOLDER']
     return os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
 
