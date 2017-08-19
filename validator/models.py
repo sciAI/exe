@@ -19,7 +19,7 @@ from nbconvert import HTMLExporter
 from validator import db
 from validator.utils import get_path_to_file, install_dependencies, \
     generate_id, is_allowed_file, read_csv_file, get_uploads_path, \
-    get_direct_url_to_notebook
+    get_direct_url_to_notebook, render_without_request
 
 
 class List(db.Document):
@@ -385,7 +385,7 @@ class Notebook(db.Document):
                 html_exporter.template_file = 'basic'
                 (body, resources) = html_exporter.from_notebook_node(notebook_content)
                 f = open(self.output_html_path, 'w')
-                rendered_template = render_template('output.html', body=body)
+                rendered_template = render_without_request('output.html', body=body)
                 f.write(rendered_template.encode('utf-8'))
                 f.close()
                 with io.open(self.output_path, mode='wt', encoding='utf-8') as f:
