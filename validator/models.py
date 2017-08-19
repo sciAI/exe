@@ -21,12 +21,16 @@ from validator.utils import get_path_to_file, install_dependencies, \
     generate_id, is_allowed_file, read_csv_file, get_uploads_path, \
     get_direct_url_to_notebook, render_without_request
 
+from rq import get_current_job
+
 
 class Task(db.Document):
     """
         Entity represents tasks
     """
     task_id = db.StringField()
+    list_id = db.StringField()
+    bla_id = db.StringField(default='')
     date_created = db.DateTimeField(default=datetime.now())
 
     # meta info
@@ -45,15 +49,17 @@ class Task(db.Document):
     def create_task(list_type, content):
         """
             Create a new task
-        """
+        """       
         queue_task = queue.enqueue(
             List.create_list,
             list_type,
             content
         )
 
+        job = get_current_job()
         new_task = Task(
-            task_id=queue_task.id
+            task_id=queue_task.id,
+            bla_id=job.id
         )
 
         new_task.save()
