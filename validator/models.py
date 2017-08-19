@@ -22,6 +22,45 @@ from validator.utils import get_path_to_file, install_dependencies, \
     get_direct_url_to_notebook, render_without_request
 
 
+class Task(db.Document):
+    """
+        Entity represents tasks
+    """
+    task_id = db.StringField()
+    date_created = db.DateTimeField(default=datetime.now())
+
+    # meta info
+    meta = {
+        'collection': 'tasks',
+        'db_alias': 'main'
+    }
+
+    def get_id(self):
+        """
+            Returns entity ID
+        """
+        return str(self.task_id)
+
+
+    @classmethod
+    def create_task(cls, list_type, content):
+        """
+            Create a new task
+        """
+        queue_task = queue.enqueue(
+            List.create_list,
+            list_type,
+            content
+        )
+
+        new_task = Task(
+            task_id=queue_task.id
+        )
+
+        new_task.save()
+        return new_task.get_id()
+
+
 class List(db.Document):
     """
         Entity represents list of urls to papers record
@@ -45,8 +84,8 @@ class List(db.Document):
         return str(self.id)
 
 
-    @classmethod
-    def create_list(cls, list_type, content):
+    @staticmethod
+    def create_list(list_type, content):
         """
             Returns new list
         """

@@ -5,7 +5,7 @@
 import re
 from flask import Blueprint, render_template, request, redirect, url_for, render_template, jsonify
 
-from validator.models import Log, List, Paper, Notebook
+from validator.models import Task, Log, List, Paper, Notebook
 from validator import queue
 
 app_routes = Blueprint(
@@ -25,26 +25,18 @@ def upload_file():
         # Step 0. Create a new list
         if request.form['text']:
             list_type = 'text'
-            urls_to_papers = request.form['text'].splitlines()
-            urls_to_papers = [x.strip()
-                              for x in urls_to_papers if not x.strip().isspace()]
-            content = urls_to_papers
+            urls = request.form['text'].splitlines()
+            urls = [x.strip() for x in urls if not x.strip().isspace()]
         elif 'file' in request.files:
             list_type = 'file'
-            file = request.files['file']
-            content = file
-            if file.filename == '':
+            urls = request.files['file']
+            if urls.filename == '':
                 return render_template('upload.html', error="Please paste some URLs/DOIs or attach .csv/.txt file")
         else:
             return render_template('upload.html', error="Please paste some URLs/DOIs or attach .csv/.txt file")
         # Step 2. Add processing in queue
-        task = queue.enqueue(
-            List.create_list,
-            list_type,
-            content
-        )
-        return task.id
-        return redirect(url_for('app_routes.render_results', list_id=11))
+        task_id = Task.create_task(list_type, urls)
+        return redirect(url_for('app_routes.render_results', list_id=task_id))
     return render_template('upload.html')
 
 
