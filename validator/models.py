@@ -67,6 +67,7 @@ class List(db.Document):
     """
         Entity represents list of urls to papers record
     """
+    task_id = db.StringField()
     filename = db.StringField(default='')
     extension = db.StringField(default='csv')
     path = db.StringField(default='')
@@ -91,16 +92,17 @@ class List(db.Document):
         """
             Returns new list
         """
-        new_list = List(list_type=list_type)
-        new_list.save()
+        # get task ID
+        task = get_current_job()
 
-        job = get_current_job()
+        new_list = List(list_type=list_type, task_id=task.id)
+        new_list.save()
 
         Log.write_log(
             new_list.get_id(),
             None,
             None,
-            'Successfully saved file with list of links ' + job.id
+            'Successfully saved file with list of links'
         )
 
         if new_list.list_type == 'file':
