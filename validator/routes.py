@@ -6,7 +6,6 @@ import re
 from flask import Blueprint, render_template, request, redirect, url_for, render_template, jsonify
 
 from validator.models import Task, Log, List, Paper, Notebook
-from validator import queue
 
 app_routes = Blueprint(
     'app_routes',

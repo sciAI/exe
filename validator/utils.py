@@ -191,7 +191,7 @@ def render_without_request(template_name, **template_vars):
     render_without_request('my_template.html', var1='foo', var2='bar')
     """
     env = jinja2.Environment(
-        loader=jinja2.PackageLoader('name.ofmy.package', 'templates')
+        loader=jinja2.PackageLoader('validator', 'templates')
     )
     template = env.get_template(template_name)
     return template.render(**template_vars)

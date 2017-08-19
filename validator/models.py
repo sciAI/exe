@@ -16,7 +16,7 @@ from nbconvert.preprocessors import ExecutePreprocessor
 from nbconvert.preprocessors.execute import CellExecutionError
 from nbconvert import HTMLExporter
 
-from validator import db
+from validator import db, queue
 from validator.utils import get_path_to_file, install_dependencies, \
     generate_id, is_allowed_file, read_csv_file, get_uploads_path, \
     get_direct_url_to_notebook, render_without_request
@@ -41,9 +41,8 @@ class Task(db.Document):
         """
         return str(self.task_id)
 
-
-    @classmethod
-    def create_task(cls, list_type, content):
+    @staticmethod
+    def create_task(list_type, content):
         """
             Create a new task
         """
@@ -84,8 +83,8 @@ class List(db.Document):
         return str(self.id)
 
 
-    @staticmethod
-    def create_list(list_type, content):
+    @classmethod
+    def create_list(cls, list_type, content):
         """
             Returns new list
         """
