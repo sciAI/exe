@@ -28,10 +28,11 @@ def upload_file():
             urls_to_papers = request.form['text'].splitlines()
             urls_to_papers = [x.strip()
                               for x in urls_to_papers if not x.strip().isspace()]
+            content = urls_to_papers
         elif 'file' in request.files:
             list_type = 'file'
             file = request.files['file']
-            urls_to_papers = []
+            content = file
             if file.filename == '':
                 return render_template('upload.html', error="Please paste some URLs/DOIs or attach .csv/.txt file")
         else:
@@ -42,7 +43,7 @@ def upload_file():
             list_type,
             content
         )
-        return jsonify(task)
+        return task.id
         return redirect(url_for('app_routes.render_results', list_id=11))
     return render_template('upload.html')
 

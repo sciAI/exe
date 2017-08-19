@@ -45,12 +45,12 @@ class List(db.Document):
         return str(self.id)
 
 
-    @staticmethod
-    def create_list(list_type, content):
+    @classmethod
+    def create_list(cls, list_type, content):
         """
             Returns new list
         """
-        new_list = List()
+        new_list = List(list_type=list_type)
         new_list.save()
 
         Log.write_log(
@@ -60,7 +60,7 @@ class List(db.Document):
             'Successfully saved file with list of links'
         )
 
-        if new_list.type == 'file':
+        if new_list.list_type == 'file':
             saving_file_status = new_list.update_file(content)
             if saving_file_status:
                 urls_to_papers = new_list.extract_list_of_links()
@@ -301,11 +301,11 @@ class Notebook(db.Document):
         new_notebook.output_html_path = get_path_to_file(
             '{0}.html'.format(notebook_filename))
 
-        self.download_notebook()
-        self.process_notebook()
+        new_notebook.download_notebook()
+        new_notebook.process_notebook()
 
-        Paper.update_status(self.paper_id)
-        List.update_status(self.list_id)
+        Paper.update_status(paper_id)
+        List.update_status(list_id)
 
         return new_notebook.get_id()
 
