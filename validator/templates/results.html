@@ -15,7 +15,11 @@
             <h1>Results of analysis</h1>
             {% for paper in results.papers %}
                 <h4>Paper: {{paper.paper_url}}</h4>
-                <h6>URL: <a href="{{paper.paper_url}}">Paper URL</a></h6>
+                {% if paper.url_type == 'doi' %}
+                    <h6>URL: <a href="https://dx.doi.org/{{paper.paper_url}}">Paper URL</a> ({{paper.url_type}})</h6>
+                {% else %}
+                    <h6>URL: <a href="{{paper.paper_url}}">Paper URL</a> ({{paper.url_type}})</h6>
+                {% endif %}
                 {% if not paper.notebooks %}
                 <p>No notebooks was found for this paper</p>
                 {% else %}

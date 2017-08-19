@@ -18,7 +18,8 @@ from nbconvert import HTMLExporter
 
 from validator import db
 from validator.utils import get_path_to_file, install_dependencies, \
-    generate_id, is_allowed_file, read_csv_file, get_uploads_path
+    generate_id, is_allowed_file, read_csv_file, get_uploads_path, \
+    get_direct_url_to_notebook
 
 
 class List(db.Document):
@@ -43,8 +44,9 @@ class List(db.Document):
         """
         return str(self.id)
 
+
     @staticmethod
-    def create_new_list():
+    def create_list(list_type, content):
         """
             Returns new list
         """
@@ -58,6 +60,34 @@ class List(db.Document):
             'Successfully saved file with list of links'
         )
 
+        if new_list.type == 'file':
+            saving_file_status = new_list.update_file(content)
+            if saving_file_status:
+                urls_to_papers = new_list.extract_list_of_links()
+            else:
+                Log.write_log(
+                    new_list.get_id(),
+                    None,
+                    None,
+                    'Wrong file format'
+                )
+        else:
+            urls_to_papers = content
+
+        # process links to papers
+        for url_to_paper in urls_to_papers:
+            new_paper = Paper.create_new_paper(new_list.get_id(), url_to_paper)
+            # get NB urls for paper
+            notebooks_urls = new_paper.extract_links_to_notebooks()
+            for notebook_url in notebooks_urls:
+                Notebook.create_new_notebook(
+                    new_list.get_id(),
+                    new_paper.get_id(),
+                    notebook_url
+                )
+            new_paper.update_status(True)
+        new_list.is_processed = True
+        new_list.save()
         return new_list
 
 
@@ -125,9 +155,11 @@ class Paper(db.Document):
     """
     original_url = db.StringField()
     download_url = db.StringField(default='')
+    url_type = db.StringField(default='paper')
     list_id = db.StringField()
     date_created = db.DateTimeField(default=datetime.now())
     is_processed = db.BooleanField(default=False)
+    
     # meta info
     meta = {
         'collection': 'papers',
@@ -151,12 +183,26 @@ class Paper(db.Document):
             None,
             'Process paper url: {0}'.format(url_to_paper)
         )
+        
         new_paper = Paper(
             original_url=url_to_paper,
-            list_id=list_id
+            list_id=list_id,
+            url_type=Paper.get_type_of_url(url_to_paper)
         )
         new_paper.save()
         return new_paper
+
+
+    @staticmethod
+    def get_type_of_url(url):
+        """
+            Return type of URL: DOI or direct
+        """
+        # https://stackoverflow.com/questions/27910/finding-a-doi-in-a-document-or-page
+        m = re.match(r'\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'<>])\S)+)\b', url)
+        if m:
+            return 'doi'
+        return 'direct'
 
     def update_status(self, status):
         """
@@ -171,17 +217,23 @@ class Paper(db.Document):
             'Processed paper url'
         )
 
-
-    def extract_links_to_notebooks(self):
-        """
-            Returns list of links to notebooks from paper
-        """
+    def get_download_url(self):
         if self.original_url.find('ncbi.nlm.nih.gov') > -1:
             res = re.findall(r'articles\/(.*)\/?', self.original_url)
             if res:
                 pub_id = res[0]
                 self.download_url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id={0}'.format(
                     pub_id)
+        elif re.match(r'\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'<>])\S)+)\b', self.original_url):
+            self.download_url = 'https://dx.doi.org/' + self.original_url
+        self.save()
+
+
+    def extract_links_to_notebooks(self):
+        """
+            Returns list of links to notebooks from paper
+        """
+        self.get_download_url()
         r = urllib.urlopen(self.download_url).read()
         soup = BeautifulSoup(r)
 
@@ -204,7 +256,7 @@ class Notebook(db.Document):
     original_url = db.StringField()
     download_url = db.StringField(default='')
     filename = db.StringField(default='')
-    path = db.StringField()
+    path = db.StringField(default='')
     output_path = db.StringField(default='')
     output_html_path = db.StringField(default='')
     list_id = db.StringField()
@@ -233,49 +285,36 @@ class Notebook(db.Document):
         """
             Returns new notebook object
         """
-        notebook_filename = generate_id() + '.ipynb'
         new_notebook = Notebook(
             original_url=notebook_url,
-            filename=notebook_filename,
-            path=get_path_to_file(notebook_filename),
-            output_path=get_path_to_file(
-                'v_output_{0}'.format(notebook_filename)),
-            output_html_path=get_path_to_file(
-                '{0}.html'.format(notebook_filename)),
             list_id=list_id,
             paper_id=paper_id
         )
         new_notebook.save()
-        return new_notebook
+
+        notebook_filename = new_notebook.get_id() + '.ipynb'
+
+        new_notebook.filename = notebook_filename
+        new_notebook.path = get_path_to_file(notebook_filename)
+        new_notebook.output_path = get_path_to_file(
+            'v_output_{0}'.format(notebook_filename))
+        new_notebook.output_html_path = get_path_to_file(
+            '{0}.html'.format(notebook_filename))
+
+        self.download_notebook()
+        self.process_notebook()
+
+        Paper.update_status(self.paper_id)
+        List.update_status(self.list_id)
+
+        return new_notebook.get_id()
 
 
     def download_notebook(self):
         """
             Download notebook to uploads folder
-        """       
-        if self.original_url.find('github.com') > -1:
-            self.download_url = self.original_url.replace('/blob/', '/raw/')
-        elif self.original_url.find('nbviewer.jupyter.org/github') > -1:
-            self.download_url = self.original_url.replace(
-                'nbviewer.jupyter.org/github',
-                'raw.githubusercontent.com'
-            ).replace(
-                '/blob/',
-                '/'
-            )
-        elif self.original_url.find('nbviewer.ipython.org/github') > -1:
-            self.download_url = self.original_url.replace(
-                'nbviewer.ipython.org/github',
-                'raw.githubusercontent.com'
-            ).replace(
-                '/blob/',
-                '/'
-            )
-        else:
-            self.download_url = self.original_url
-
-        print(self.download_url)
-        print(self.path)
+        """
+        self.download_url = get_direct_url_to_notebook(self.original_url)
 
         urllib.urlretrieve(
             self.download_url,

@@ -3,7 +3,7 @@
 import sys
 from rq import Connection, Worker
 
-sys.path.insert(0, "/opt/sciai/")
+sys.path.insert(0, "/opt/jupyter-testing")
 
 
 # Provide queue names to listen to as arguments to this script,

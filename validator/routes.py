@@ -6,6 +6,7 @@ import re
 from flask import Blueprint, render_template, request, redirect, url_for, render_template, jsonify
 
 from validator.models import Log, List, Paper, Notebook
+from validator import queue
 
 app_routes = Blueprint(
     'app_routes',
@@ -22,45 +23,27 @@ def upload_file():
     """
     if request.method == 'POST':
         # Step 0. Create a new list
-        new_list = List.create_new_list()
         if request.form['text']:
-            new_list.update_type('text')
+            list_type = 'text'
             urls_to_papers = request.form['text'].splitlines()
             urls_to_papers = [x.strip()
                               for x in urls_to_papers if not x.strip().isspace()]
         elif 'file' in request.files:
-            new_list.update_type('file')
+            list_type = 'file'
             file = request.files['file']
+            urls_to_papers = []
             if file.filename == '':
                 return render_template('upload.html', error="Please paste some URLs/DOIs or attach .csv/.txt file")
-            update_status = new_list.update_file(file)    
-            if update_status:        
-                # Step 1. Extract links to papers
-                urls_to_papers = new_list.extract_list_of_links()
-            else:
-                # in case of not allowed file format
-                return render_template('upload.html', error="Unallowed file format. Please attach .csv/.txt file")
         else:
             return render_template('upload.html', error="Please paste some URLs/DOIs or attach .csv/.txt file")
-        # Step 2. Extract links to notebooks
-        for url_to_paper in urls_to_papers:
-            new_paper = Paper.create_new_paper(new_list.get_id(), url_to_paper)
-            # get NB urls for paper
-            notebooks_urls = new_paper.extract_links_to_notebooks()
-            for notebook_url in notebooks_urls:
-                # download and process notebook
-                notebook = Notebook.create_new_notebook(
-                    new_list.get_id(),
-                    new_paper.get_id(),
-                    notebook_url
-                )
-                notebook.download_notebook()
-                notebook.process_notebook()
-
-            new_paper.update_status(True)
-        new_list.is_processed = True
-        new_list.save()
-        return redirect(url_for('app_routes.render_results', list_id=new_list.get_id()))
+        # Step 2. Add processing in queue
+        task = queue.enqueue(
+            List.create_list,
+            list_type,
+            content
+        )
+        return jsonify(task)
+        return redirect(url_for('app_routes.render_results', list_id=11))
     return render_template('upload.html')
 
 
@@ -89,6 +72,7 @@ def render_results(list_id):
             )
         results["papers"].append({
             "paper_url": paper.original_url,
-            "notebooks": tmp_list
+            "notebooks": tmp_list,
+            "url_type": paper.url_type
         })
     return render_template('results.html', results=results)
