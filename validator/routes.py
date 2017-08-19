@@ -39,12 +39,16 @@ def upload_file():
     return render_template('upload.html')
 
 
-@app_routes.route('/results/<list_id>', methods=['GET'])
-def render_results(list_id):
+@app_routes.route('/results/<task_id>', methods=['GET'])
+def render_results(task_id):
     """
         Render results of analysis
     """
-    papers = Paper.objects(list_id=list_id)
+    papers_list = List.objects(task_id=task_id).first()
+    if not papers_list or not papers_list.is_processed:
+        return 'Still processing or wrong task ID'
+
+    papers = Paper.objects(list_id=papers_list.get_id())
     results = {
         "list_id": list_id, 
         "papers": []
