@@ -30,7 +30,6 @@ class Task(db.Document):
     """
     task_id = db.StringField()
     list_id = db.StringField()
-    bla_id = db.StringField(default='')
     date_created = db.DateTimeField(default=datetime.now())
 
     # meta info
@@ -56,10 +55,8 @@ class Task(db.Document):
             content
         )
 
-        job = get_current_job()
         new_task = Task(
-            task_id=queue_task.id,
-            bla_id=job.id
+            task_id=queue_task.id
         )
 
         new_task.save()
@@ -97,11 +94,13 @@ class List(db.Document):
         new_list = List(list_type=list_type)
         new_list.save()
 
+        job = get_current_job()
+
         Log.write_log(
             new_list.get_id(),
             None,
             None,
-            'Successfully saved file with list of links'
+            'Successfully saved file with list of links ' + job.id
         )
 
         if new_list.list_type == 'file':
