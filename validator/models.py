@@ -85,7 +85,7 @@ class List(db.Document):
                     new_paper.get_id(),
                     notebook_url
                 )
-            new_paper.update_status(True)
+            new_paper.mark_as_done()
         new_list.is_processed = True
         new_list.save()
         return new_list
@@ -204,18 +204,20 @@ class Paper(db.Document):
             return 'doi'
         return 'direct'
 
-    def update_status(self, status):
+
+    def mark_as_done(self):
         """
             Update status of paper
         """
-        self.is_processed = status
+        self.is_processed = True
         self.save()
         Log.write_log(
             self.list_id,
             self.get_id(),
             None,
-            'Processed paper url'
+            'Paper marked as done'
         )
+        return True
 
     def get_download_url(self):
         if self.original_url.find('ncbi.nlm.nih.gov') > -1:
@@ -303,9 +305,6 @@ class Notebook(db.Document):
 
         new_notebook.download_notebook()
         new_notebook.process_notebook()
-
-        Paper.update_status(paper_id)
-        List.update_status(list_id)
 
         return new_notebook.get_id()
 
