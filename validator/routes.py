@@ -62,7 +62,7 @@ def check_results():
             if not task:
                 return jsonify({'error': 'No task with specified ID: {0}'.format(task_id)}), \
                     200, {'ContentType': 'application/json'}
-            return jsonify({'error': 'Your list of URLs in queue. Processing can take some time, please, be patient.'}), \
+            return jsonify({'warning': 'Your list of URLs still in queue. Processing can take some time, please, be patient.'}), \
                 200, {'ContentType': 'application/json'}
 
         # if still processing return logs

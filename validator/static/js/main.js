@@ -61,9 +61,22 @@ $(function () {
                                 {
                                     message: data.error,
                                     date_created: (new Date()).toString()
-                                }]);
+                                }
+                            ]);
                             clearInterval(timerId);
                             return;
+                        } if (data.warning) {
+                            updateLog([
+                                {
+                                    message: data.warning,
+                                    date_created: (new Date()).toString()
+                                }
+                            ]);
+                            clearInterval(timerId);
+                            // re-run interval after 10 seconds
+                            setTimeout(function() {
+                                timerId = setInterval(checkResults, 3000, taskId);
+                            }, 10000);
                         } else if (data.logs.length) {
                             latestLogId = data.logs[data.logs.length - 1]['id'];
                             updateLog(data.logs);
@@ -77,7 +90,7 @@ $(function () {
             for (var i = 0; i < messages.length; i++) {
                 var msg = messages[i];
                 logContainer.append('<p>[' + msg['date_created'] + ']:' + msg['message'] + '</p>');
-                body.animate({ scrollTop: $(document).height() }, 500)
+                body.animate({ scrollTop: $(document).height() }, 100)
             }
         }
 
