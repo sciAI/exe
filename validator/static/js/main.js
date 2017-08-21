@@ -76,7 +76,7 @@ $(function () {
                             // re-run interval after 10 seconds
                             setTimeout(function() {
                                 timerId = setInterval(checkResults, 3000, taskId);
-                            }, 10000);
+                            }, 30000);
                         } else if (data.logs.length) {
                             latestLogId = data.logs[data.logs.length - 1]['id'];
                             updateLog(data.logs);
