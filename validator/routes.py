@@ -59,7 +59,7 @@ def check_results():
 
         # if still processing return logs
         if not papers_list.is_processed:
-            logs = Log.objects(list_id=papers_list)
+            logs = Log.objects(list_id=papers_list.get_id())
             results = {'is_processed': False, 'logs':[]}
             for log in logs:
                 results['logs'].append({
