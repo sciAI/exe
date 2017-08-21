@@ -289,7 +289,7 @@ class Paper(db.Document):
             self.list_id,
             self.get_id(),
             None,
-            'Start downloading paper from URL: {0}'.format(self.download_url)
+            'Start downloading paper from URL: {0}'.format(self.original_url)
         )
         self.get_download_url()
         r = urllib.urlopen(self.download_url).read()
