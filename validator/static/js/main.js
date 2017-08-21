@@ -63,8 +63,8 @@ $(function () {
                                     date_created: (new Date()).toString()
                                 }]);
                             clearInterval(timerId);
-                        }
-                        if (data.logs.length) {
+                            return;
+                        } else if (data.logs.length) {
                             latestLogId = data.logs[data.logs.length - 1]['id'];
                             updateLog(data.logs);
                         }
