@@ -1,7 +1,7 @@
 $(function () {
     var timerId = null;
-    var container = $('.main-block row');
-    var logContainer = $('.logs-block row');
+    var container = $('.main-block .row');
+    var logContainer = $('.logs-block .row');
     var latestLogId = '000000000000000000000000';
 
     console.log('Ready to go!');
@@ -50,7 +50,7 @@ $(function () {
                     if (data.is_processed) {
                         console.log('IS PROCESSED');
                         clearInterval(timerId);
-                        updateLog(['<a style="color:red" href="/results/' + task_id + '">Click here to open your report</a>']);
+                        updateLog(['<a style="color:red" href="/results/' + taskId + '">Click here to open your report</a>']);
                     } else {
                         console.log('IS NOT PROCESSED');
                         latestLogId = data.logs[data.logs.length-1]['id'];
