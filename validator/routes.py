@@ -35,7 +35,7 @@ def upload_file():
             return render_template('upload.html', error="Please paste some URLs/DOIs or attach .csv/.txt file")
         # Step 2. Add processing in queue
         task_id = Task.create_task(list_type, urls)
-        return redirect(url_for('app_routes.render_results', list_id=task_id))
+        return redirect(url_for('app_routes.render_results', task_id=task_id))
     return render_template('upload.html')
 
 
@@ -50,7 +50,7 @@ def render_results(task_id):
 
     papers = Paper.objects(list_id=papers_list.get_id())
     results = {
-        "list_id": list_id, 
+        "list_id": papers_list.get_id(), 
         "papers": []
     }
     for paper in papers:
