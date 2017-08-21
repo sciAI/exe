@@ -36,11 +36,11 @@ $(function () {
                 logContainer.show();
 
                 // create timer
-                timerId = setInterval(checkResults, 3000, task_id, latestLogId);
+                timerId = setInterval(checkResults, 3000, task_id);
             }
         });
 
-        function checkResults(taskId, latestLogId) {
+        function checkResults(taskId) {
             $.ajax({
                 url: '/check-results',
                 data: { task_id: taskId, latest_log_id: latestLogId},
@@ -51,7 +51,7 @@ $(function () {
                         console.log('IS PROCESSED');
                         clearInterval(timerId);
                         updateLog([
-                            {message: '<a style="color:red" href="/results/' + taskId + '">Click here to open your report</a>',
+                            {message: '<a style="color:red" target="_blank" href="/results/' + taskId + '">Click here to open your report</a>',
                             date_created: data.date_updated}]);
                     } else {
                         console.log('IS NOT PROCESSED');
