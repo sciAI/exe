@@ -26,10 +26,11 @@
     width: 100%;
 }
 
-.logs {
+/* Logs */
+.logs-block {
     font-family: monospace;
 }
 
-.logs p {
+.logs-block p {
     margin-bottom: 0;
 }

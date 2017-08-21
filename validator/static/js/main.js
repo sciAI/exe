@@ -1,7 +1,7 @@
 $(function () {
     var timerId = null;
-    var container = $('.main-block');
-    var logContainer = null;
+    var container = $('.main-block row');
+    var logContainer = $('.logs-block row');
     var latestLogId = '000000000000000000000000';
 
     console.log('Ready to go!');
@@ -32,8 +32,8 @@ $(function () {
                     return;
                 }
                 var task_id = data.task_id;
-                container.html('');
-                logContainer = $('<div>', {class: 'logs'}).appendTo(container);
+                container.hide();
+                logContainer.show();
 
                 // create timer
                 timerId = setInterval(checkResults, 3000, task_id, latestLogId);
