@@ -70,7 +70,7 @@ def check_results():
                 results['logs'].append({
                     'id': log.get_id(),
                     'date_created': log.date_created,
-                    'message': log.message
+                    'message': log.message.replace('\n', '<br />')
                 })
             return jsonify(results), 200, {'ContentType': 'application/json'}
         # if processed return results
@@ -108,7 +108,7 @@ def render_results(task_id):
                     "filename": notebook.filename,
                     "url": notebook.original_url,
                     "is_failed": notebook.is_failed,
-                    "message": re.sub(r'(\\n)+', '\n', notebook.message).replace('\\n', '<br>')
+                    "message": re.sub(r'(\\n)+', '\n', notebook.message).replace('\n', '<br>')
                 }
             )
         results["papers"].append({
