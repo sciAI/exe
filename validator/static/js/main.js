@@ -1,7 +1,7 @@
 $(function () {
     var timerId = null;
     var container = $('.main-block .row');
-    var logContainer = $('.logs-block .row');
+    var logContainer = $('.logs-block .row').hide();
     var latestLogId = '000000000000000000000000';
 
     console.log('Ready to go!');
