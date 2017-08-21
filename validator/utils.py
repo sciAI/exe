@@ -76,9 +76,11 @@ def install_dependencies(nb_string, kernel_name):
                 continue
             try:
                 process = subprocess.Popen(
-                    [app.config['PYTHON2_PIP']],
-                    'install',
-                    module,
+                    [
+                        app.config['PYTHON2_PIP']
+                        'install',
+                        module
+                    ],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE
                 )
@@ -107,9 +109,11 @@ def install_dependencies(nb_string, kernel_name):
                 continue
             try:
                 process = subprocess.Popen(
-                    [app.config['PYTHON3_PIP']],
-                    'install',
-                    module,
+                    [
+                        app.config['PYTHON3_PIP'],
+                        'install',
+                        module
+                    ],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE
                 )

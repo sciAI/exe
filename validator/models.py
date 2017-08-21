@@ -48,7 +48,7 @@ class Task(db.Document):
     def create_task(list_type, content):
         """
             Create a new task
-        """       
+        """
         queue_task = queue.enqueue(
             List.create_list,
             list_type,
@@ -60,6 +60,14 @@ class Task(db.Document):
         )
 
         new_task.save()
+
+        Log.write_log(
+            new_task.get_id(),
+            None,
+            None,
+            'List of references added to the processing queue: {0} position'.format(queue.count)
+        )
+
         return new_task.get_id()
 
 
@@ -360,7 +368,21 @@ class Notebook(db.Document):
         """
             Download notebook to uploads folder
         """
+        Log.write_log(
+            self.list_id,
+            self.paper_id,
+            self.get_id(),
+            'Start downloading notebook'
+        )
+
         self.download_url = get_direct_url_to_notebook(self.original_url)
+
+        Log.write_log(
+            self.list_id,
+            self.paper_id,
+            self.get_id(),
+            'URL to download notebook: {0}'.format(self.download_url)
+        )
 
         urllib.urlretrieve(
             self.download_url,
@@ -409,8 +431,21 @@ class Notebook(db.Document):
             )
             message = 'Successfully processed'
             is_failed = False
+            Log.write_log(
+                self.list_id,
+                self.paper_id,
+                self.get_id(),
+                'Successfully processed notebook: {0}'.format(self.original_url)
+            )
         except Exception as e:
             message = str(e)
+            Log.write_log(
+                self.list_id,
+                self.paper_id,
+                self.get_id(),
+                'Caught exception when process: {0}'.format(message)
+            )
+
             kernel_name = None if 'kernel_name' not in locals() else kernel_name
             is_failed = True
             notebook_content = False if 'notebook_content' not in locals() else notebook_content
