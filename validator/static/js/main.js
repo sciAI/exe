@@ -1,5 +1,6 @@
 $(function () {
     var timerId = null;
+    var body = $("html, body");
     var container = $('.main-block .row');
     var logContainer = $('.logs-block .row').hide();
     var latestLogId = '000000000000000000000000';
@@ -55,8 +56,10 @@ $(function () {
                             date_created: data.date_updated}]);
                     } else {
                         console.log('IS NOT PROCESSED');
-                        latestLogId = data.logs[data.logs.length-1]['id'];
-                        updateLog(data.logs);
+                        if (data.logs.length) {
+                            latestLogId = data.logs[data.logs.length - 1]['id'];
+                            updateLog(data.logs);
+                        }
                     }
                 }
             })
@@ -66,6 +69,7 @@ $(function () {
             for (var i = 0; i < messages.length; i++) {
                 var msg = messages[i];
                 logContainer.append('<p>[' + msg['date_created'] + ']:' + msg['message'] + '</p>');
+                body.animate({ scrollTop: $(document).height() }, 1000)
             }
         }
 
