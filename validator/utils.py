@@ -77,7 +77,7 @@ def install_dependencies(nb_string, kernel_name):
             try:
                 process = subprocess.Popen(
                     [
-                        app.config['PYTHON2_PIP']
+                        app.config['PYTHON2_PIP'],
                         'install',
                         module
                     ],

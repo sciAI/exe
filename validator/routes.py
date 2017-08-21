@@ -58,10 +58,12 @@ def check_results():
         latest_log_id = request.form['latest_log_id']
         papers_list = List.objects(task_id=task_id).first()
         if not papers_list:
-            task = Task.objects(id=task_id).first()
+            task = Task.objects(task_id=task_id).first()
             if not task:
                 return jsonify({'error': 'No task with specified ID: {0}'.format(task_id)}), \
                     200, {'ContentType': 'application/json'}
+            return jsonify({'error': 'Your list of URLs in queue. Processing can take some time, please, be patient.'}), \
+                200, {'ContentType': 'application/json'}
 
         # if still processing return logs
         if not papers_list.is_processed:
