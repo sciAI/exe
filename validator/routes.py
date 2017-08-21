@@ -6,6 +6,7 @@ import re
 from flask import Blueprint, render_template, request, redirect, url_for, render_template, jsonify
 
 from validator.models import Task, Log, List, Paper, Notebook
+from validator.utils import is_allowed_file, generate_id, get_path_to_file
 
 app_routes = Blueprint(
     'app_routes',
@@ -28,11 +29,13 @@ def upload_file():
             urls = [x.strip() for x in urls if not x.strip().isspace()]
         elif 'file' in request.files:
             list_type = 'file'
-            urls = request.files['file']
-            if urls.filename == '':
+            file = request.files['file']
+            if not file or file.filename == '' or not is_allowed_file(file.filename):
                 return jsonify({'error': 'Please paste some URLs/DOIs or attach .csv/.txt file'}), \
                     200, {'ContentType': 'application/json'}
                 # return render_template('upload.html', error="Please paste some URLs/DOIs or attach .csv/.txt file")
+            urls = generate_id() + '.csv'
+            file.save(get_path_to_file(urls))
         else:
             return jsonify({'error': 'Please paste some URLs/DOIs or attach .csv/.txt file'}), \
                 200, {'ContentType': 'application/json'}

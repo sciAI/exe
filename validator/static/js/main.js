@@ -56,6 +56,14 @@ $(function () {
                             date_created: data.date_updated}]);
                     } else {
                         console.log('IS NOT PROCESSED');
+                        if (data.error) {
+                            updateLog([
+                                {
+                                    message: data.error,
+                                    date_created: (new Date()).toString()
+                                }]);
+                            clearInterval(timerId);
+                        }
                         if (data.logs.length) {
                             latestLogId = data.logs[data.logs.length - 1]['id'];
                             updateLog(data.logs);

@@ -161,15 +161,10 @@ class List(db.Document):
         )
 
 
-    def update_file(self, file):
+    def update_file(self, filename):
         """
             Create a new file with list of links
         """
-        if not file or not is_allowed_file(file.filename):
-            return False
-        new_filename = generate_id() + '.csv'
-        file.save(get_path_to_file(new_filename))
-
         self.filename = new_filename
         self.path = get_path_to_file(new_filename)
         self.save()
