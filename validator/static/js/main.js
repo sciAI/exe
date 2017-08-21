@@ -13,6 +13,7 @@ $(function () {
 
     // upload form button listener
     $('.main-form button').click(function (e) {
+        console.log('Submit main form');
         e.preventDefault();
         var fd = new FormData($('.main-form')[0]);
 
@@ -32,13 +33,13 @@ $(function () {
                 container.html('');
 
                 // create timer
-                timerId = setInterval(checkStatus, 3000, task_id);
+                timerId = setInterval(checkResults, 3000, task_id);
             }
         });
 
-        function checkStatus(task_id) {
+        function checkResults(task_id) {
             $.ajax({
-                url: '/check-status',
+                url: '/check-results',
                 data: {task_id: task_id},
                 type: 'POST',
                 success: function(data) {
