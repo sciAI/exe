@@ -77,7 +77,7 @@ $(function () {
             for (var i = 0; i < messages.length; i++) {
                 var msg = messages[i];
                 logContainer.append('<p>[' + msg['date_created'] + ']:' + msg['message'] + '</p>');
-                body.animate({ scrollTop: $(document).height() }, 1000)
+                body.animate({ scrollTop: $(document).height() }, 500)
             }
         }
 

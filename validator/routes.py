@@ -80,7 +80,7 @@ def check_results():
                 results['logs'].append({
                     'id': log.get_id(),
                     'date_created': log.date_created,
-                    'message': log.message.replace('\n', '<br />')
+                    'message': log.message.replace('/opt/jupyter-testing/', './').replace('\n', '<br />')
                 })
             return jsonify(results), 200, {'ContentType': 'application/json'}
         # if processed return results

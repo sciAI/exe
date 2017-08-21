@@ -285,9 +285,22 @@ class Paper(db.Document):
         """
             Returns list of links to notebooks from paper
         """
+        Log.write_log(
+            self.list_id,
+            self.paper_id,
+            None,
+            'Start downloading paper from URL: {0}'.format(self.download_url)
+        )
         self.get_download_url()
         r = urllib.urlopen(self.download_url).read()
         soup = BeautifulSoup(r)
+
+        Log.write_log(
+            self.list_id,
+            self.paper_id,
+            None,
+            'Downloaded paper from URL: {0}'.format(self.download_url)
+        )
 
         notebooks_urls = []
         for url in soup.find_all(['a', 'ext-link']):
@@ -297,6 +310,14 @@ class Paper(db.Document):
                 notebooks_urls.append(current_url)
 
         notebooks_urls = list(set(notebooks_urls))
+
+        Log.write_log(
+            self.list_id,
+            self.paper_id,
+            None,
+            'Found {0} links to notebooks in paper'.format(len(notebooks_urls))
+        )
+
         return notebooks_urls
 
 
@@ -367,7 +388,7 @@ class Notebook(db.Document):
             self.list_id,
             self.paper_id,
             self.get_id(),
-            'Start downloading notebook'
+            'Start downloading notebook: {0}'.format(self.original_url)
         )
 
         self.download_url = get_direct_url_to_notebook(self.original_url)
@@ -386,6 +407,13 @@ class Notebook(db.Document):
         self.is_downloaded = True
         self.save()
 
+        Log.write_log(
+            self.list_id,
+            self.paper_id,
+            self.get_id(),
+            'Downloaded notebook: {0}'.format(self.download_url)
+        )
+
 
     def process_notebook(self):
         """
@@ -395,7 +423,7 @@ class Notebook(db.Document):
             self.list_id,
             self.paper_id,
             self.get_id(),
-            'Start process notebook'
+            'Start processing notebook: {0}'.format(self.original_url)
         )
         try:
             notebook_file = io.open(self.path, encoding='utf-8')
@@ -426,6 +454,7 @@ class Notebook(db.Document):
             )
             message = 'Successfully processed'
             is_failed = False
+
             Log.write_log(
                 self.list_id,
                 self.paper_id,
@@ -455,7 +484,7 @@ class Notebook(db.Document):
                     self.list_id,
                     self.paper_id,
                     self.get_id(),
-                    'Try to write HTML output to file'
+                    'Start writing HTML output to file'
                 )
                 html_exporter = HTMLExporter()
                 html_exporter.template_file = 'basic'
