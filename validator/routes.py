@@ -59,7 +59,7 @@ def check_results():
 
         # if still processing return logs
         if not papers_list.is_processed:
-            logs = Log.objects(list_id=papers_list.get_id())
+            logs = Log.objects(list_id=papers_list.get_id()).order_by('date_created')
             results = {'is_processed': False, 'logs':[]}
             for log in logs:
                 results['logs'].append({
@@ -67,11 +67,11 @@ def check_results():
                     'date_created': log.date_created,
                     'message': log.message
                 })
-            return jsonify({'results': results}), 200, {'ContentType': 'application/json'}
+            return jsonify(results), 200, {'ContentType': 'application/json'}
         # if processed return results
         papers = Paper.objects(list_id=papers_list.get_id())
         results = {
-            'is_processed': papers_list.is_processed,
+            
             "papers": []
         }
         for paper in papers:
@@ -92,7 +92,7 @@ def check_results():
                 "notebooks": tmp_list,
                 "url_type": paper.url_type
             })
-        return jsonify({'results': results}), 200, {'ContentType': 'application/json'}
+        return jsonify(results), 200, {'ContentType': 'application/json'}
     return jsonify({'error': 'No task ID specified in query'}), \
         200, {'ContentType': 'application/json'}
 

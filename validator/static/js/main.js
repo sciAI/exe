@@ -1,5 +1,7 @@
 $(function () {
     var timerId = null;
+    var container = $('.main-block');
+    var logContainer = null;
 
     console.log('Ready to go!');
     // update placeholder for file input
@@ -29,8 +31,8 @@ $(function () {
                     return;
                 }
                 var task_id = data.task_id;
-                var container = $('body .container .row');
                 container.html('');
+                var logContainer = $('<div>', {class: 'logs'}).appendTo(container);
 
                 // create timer
                 timerId = setInterval(checkResults, 3000, task_id);
@@ -47,6 +49,7 @@ $(function () {
                     if (data.is_processed) {
                         console.log('IS PROCESSED');
                         clearInterval(timerId);
+                        updateLog(['<a style="color:red" href="/results/' + task_id + '">Click here to open your report</a>']);
                     } else {
                         console.log('IS NOT PROCESSED');
                         updateLog(data.results);
@@ -56,9 +59,8 @@ $(function () {
         }
 
         function updateLog(messages) {
-            var container = $('body .container .row');
             for (var i = 0; i < messages.length; i++) {
-                container.append('<p>' + messages[i]['message'] + '</p>');
+                logContainer.append('<p>' + messages[i]['message'] + '</p>');
             }
         }
 
