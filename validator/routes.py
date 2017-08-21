@@ -77,26 +77,8 @@ def check_results():
         papers = Paper.objects(list_id=papers_list.get_id())
         results = {
             'is_processed': True,
-            "papers": []
+            'date_updated': papers_list.date_updated
         }
-        for paper in papers:
-            notebooks = Notebook.objects(paper_id=paper.get_id())
-            tmp_list = []
-            for notebook in notebooks:
-                tmp_list.append(
-                    {
-                        "id": notebook.get_id(),
-                        "filename": notebook.filename,
-                        "url": notebook.original_url,
-                        "is_failed": notebook.is_failed,
-                        "message": re.sub(r'(\\n)+', '\n', notebook.message).replace('\\n', '<br>')
-                    }
-                )
-            results["papers"].append({
-                "paper_url": paper.original_url,
-                "notebooks": tmp_list,
-                "url_type": paper.url_type
-            })
         return jsonify(results), 200, {'ContentType': 'application/json'}
     return jsonify({'error': 'No task ID specified in query'}), \
         200, {'ContentType': 'application/json'}

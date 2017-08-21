@@ -50,7 +50,9 @@ $(function () {
                     if (data.is_processed) {
                         console.log('IS PROCESSED');
                         clearInterval(timerId);
-                        updateLog(['<a style="color:red" href="/results/' + taskId + '">Click here to open your report</a>']);
+                        updateLog([
+                            {message: '<a style="color:red" href="/results/' + taskId + '">Click here to open your report</a>',
+                            date_created: data.date_updated}]);
                     } else {
                         console.log('IS NOT PROCESSED');
                         latestLogId = data.logs[data.logs.length-1]['id'];

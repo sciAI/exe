@@ -72,6 +72,7 @@ class List(db.Document):
     extension = db.StringField(default='csv')
     path = db.StringField(default='')
     date_created = db.DateTimeField(default=datetime.now())
+    date_updated = db.DateTimeField(default=datetime.now())
     is_processed = db.BooleanField(default=False)
     list_type = db.StringField(db_field="type")
     # meta info
@@ -132,6 +133,7 @@ class List(db.Document):
                 )
             new_paper.mark_as_done()
         new_list.is_processed = True
+        new_list.date_updated = datetime.now()
         new_list.save()
         return new_list
 
