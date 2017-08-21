@@ -2,6 +2,7 @@ $(function () {
     var timerId = null;
     var container = $('.main-block');
     var logContainer = null;
+    var latestLogId = '000000000000000000000000';
 
     console.log('Ready to go!');
     // update placeholder for file input
@@ -35,14 +36,14 @@ $(function () {
                 var logContainer = $('<div>', {class: 'logs'}).appendTo(container);
 
                 // create timer
-                timerId = setInterval(checkResults, 3000, task_id);
+                timerId = setInterval(checkResults, 3000, task_id, latestLogId);
             }
         });
 
-        function checkResults(task_id) {
+        function checkResults(taskId, latestLogId) {
             $.ajax({
                 url: '/check-results',
-                data: {task_id: task_id},
+                data: { task_id: taskId, latest_log_id: latestLogId},
                 type: 'POST',
                 success: function(data) {
                     console.log(data);
@@ -52,7 +53,8 @@ $(function () {
                         updateLog(['<a style="color:red" href="/results/' + task_id + '">Click here to open your report</a>']);
                     } else {
                         console.log('IS NOT PROCESSED');
-                        updateLog(data.results);
+                        latestLogId = data.logs[data.logs.length-1]['id'];
+                        updateLog(data.logs);
                     }
                 }
             })
@@ -60,7 +62,8 @@ $(function () {
 
         function updateLog(messages) {
             for (var i = 0; i < messages.length; i++) {
-                logContainer.append('<p>' + messages[i]['message'] + '</p>');
+                var msg = messages[i];
+                logContainer.append('<p>[' + msg['date_created'] + ']:' + msg['message'] + '</p>');
             }
         }
 

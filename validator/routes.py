@@ -50,8 +50,9 @@ def check_results():
     """
         Check results by task ID
     """
-    if request.form['task_id']:
+    if request.form['task_id'] and request.form['latest_log_id']:
         task_id = request.form['task_id']
+        latest_log_id = request.form['latest_log_id']
         papers_list = List.objects(task_id=task_id).first()
         if not papers_list:
             return jsonify({'error': 'No list of papers for this task ID'}), \
@@ -59,7 +60,11 @@ def check_results():
 
         # if still processing return logs
         if not papers_list.is_processed:
-            logs = Log.objects(list_id=papers_list.get_id()).order_by('date_created')
+            logs = Log.objects(
+                list_id=papers_list.get_id(),
+                id__gt=latest_log_id
+            ).order_by('date_created')
+
             results = {'is_processed': False, 'logs':[]}
             for log in logs:
                 results['logs'].append({
@@ -71,7 +76,7 @@ def check_results():
         # if processed return results
         papers = Paper.objects(list_id=papers_list.get_id())
         results = {
-            
+            'is_processed': True,
             "papers": []
         }
         for paper in papers:

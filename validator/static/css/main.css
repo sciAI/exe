@@ -25,3 +25,11 @@
 .custom-file {
     width: 100%;
 }
+
+.logs {
+    font-family: monospace;
+}
+
+.logs p {
+    margin-bottom: 0;
+}
