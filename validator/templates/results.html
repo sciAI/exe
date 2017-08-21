@@ -12,7 +12,7 @@
         {% if not results.papers %}
             <h1 style="color:red;">Wrong results code: {{results.list_id}}</h1>
         {% else %}
-            <h1>Results of analysis</h1>
+            <h1 class="mb-4">Results of analysis</h1>
             {% for paper in results.papers %}
                 <h4>Paper: {{paper.paper_url}}</h4>
                 {% if paper.url_type == 'doi' %}

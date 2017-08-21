@@ -65,6 +65,13 @@ def check_results():
                 id__gt=latest_log_id
             ).order_by('date_created')
 
+            # To fix: search by task ID written in list_id
+            if not logs:
+                logs = Log.objects(
+                    list_id=task_id,
+                    id__gt=latest_log_id
+                ).order_by('date_created')
+
             results = {'is_processed': False, 'logs':[]}
             for log in logs:
                 results['logs'].append({
