@@ -33,7 +33,7 @@ $(function () {
                 }
                 var task_id = data.task_id;
                 container.html('');
-                var logContainer = $('<div>', {class: 'logs'}).appendTo(container);
+                logContainer = $('<div>', {class: 'logs'}).appendTo(container);
 
                 // create timer
                 timerId = setInterval(checkResults, 3000, task_id, latestLogId);
