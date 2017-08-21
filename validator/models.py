@@ -165,8 +165,8 @@ class List(db.Document):
         """
             Create a new file with list of links
         """
-        self.filename = new_filename
-        self.path = get_path_to_file(new_filename)
+        self.filename = filename
+        self.path = get_path_to_file(filename)
         self.save()
         Log.write_log(
             self.get_id(),
@@ -287,7 +287,7 @@ class Paper(db.Document):
         """
         Log.write_log(
             self.list_id,
-            self.paper_id,
+            self.get_id(),
             None,
             'Start downloading paper from URL: {0}'.format(self.download_url)
         )
@@ -297,7 +297,7 @@ class Paper(db.Document):
 
         Log.write_log(
             self.list_id,
-            self.paper_id,
+            self.get_id(),
             None,
             'Downloaded paper from URL: {0}'.format(self.download_url)
         )
@@ -313,7 +313,7 @@ class Paper(db.Document):
 
         Log.write_log(
             self.list_id,
-            self.paper_id,
+            self.get_id(),
             None,
             'Found {0} links to notebooks in paper'.format(len(notebooks_urls))
         )
