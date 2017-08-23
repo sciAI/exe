@@ -292,7 +292,16 @@ class Paper(db.Document):
             'Start downloading paper from URL: {0}'.format(self.original_url)
         )
         self.get_download_url()
-        r = urllib.urlopen(self.download_url).read()
+        try:
+            r = urllib.urlopen(self.download_url).read()
+        except Exception as e:
+            Log.write_log(
+                self.list_id,
+                self.paper_id,
+                self.get_id(),
+                'Caught exception when try to download paper: {0}'.format(str(e))
+            )
+            return []
         soup = BeautifulSoup(r)
 
         Log.write_log(
