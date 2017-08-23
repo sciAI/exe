@@ -131,3 +131,31 @@ def render_results(task_id):
             "url_type": paper.url_type
         })
     return render_template('results.html', results=results)
+
+
+
+@app_routes.route('/logs/<task_id>', methods=['GET'])
+def render_logs(task_id):
+    """
+        Render results of analysis
+    """
+    papers_list = List.objects(task_id=task_id).first()
+    if not papers_list or not papers_list.is_processed:
+        return 'Still processing or wrong task ID'
+
+    notebooks = Notebook.objects(list_id=papers_list.get_id())
+    
+    if not notebooks:
+        return 'No notebooks for this task found'
+
+    results = []
+
+    for notebook in notebooks:
+        logs = Log.objects(notebook_id=notebook.get_id()).all()
+        results.append({
+            "id": notebook.get_id(),
+            "notebook": notebook,
+            "logs": logs
+        })
+    
+    return render_template('logs.html', results=results)

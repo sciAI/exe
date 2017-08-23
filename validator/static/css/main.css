@@ -26,6 +26,17 @@
     width: 100%;
 }
 
+
+#accordion .card-header,
+#accordion .card-block {
+    word-wrap: break-word;
+}
+
+#accordion .logs {
+    font-size: 12px;
+}
+
+
 /* Logs */
 .logs-block {
     font-family: monospace;

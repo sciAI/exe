@@ -24,7 +24,7 @@
                 <p>No notebooks was found for this paper</p>
                 {% else %}
                 {% for notebook in paper.notebooks %}
-                <p><b>Notebook URL:</b> <a target="_blank" href="{{notebook.url}}">Notebook URL</a></p>
+                <p><b>Notebook URL:</b> <a target="_blank" href="{{notebook.original_url}}">Notebook URL</a></p>
                 <p><b>Output URL:</b> <a target="_blank" href="/static/uploads/{{notebook.id}}.ipynb.html">Output URL</a></p>
                 <p>
                     {% if notebook.is_failed %}

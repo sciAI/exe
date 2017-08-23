@@ -297,8 +297,8 @@ class Paper(db.Document):
         except Exception as e:
             Log.write_log(
                 self.list_id,
-                self.paper_id,
                 self.get_id(),
+                None,
                 'Caught exception when try to download paper: {0}'.format(str(e))
             )
             return []

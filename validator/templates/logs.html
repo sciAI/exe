@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jupyter notebooks validator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+
+<body>
+    <div class="container mt-4 mb-4">
+
+        <div id="accordion" role="tablist" aria-multiselectable="true">
+            {% for result in results %}
+            <div class="card">
+                <div class="card-header" role="tab" id="heading{{result.id}}">
+                    <h6 class="mb-0">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{result.id}}" aria-expanded="true" aria-controls="collapse{{result.id}}">
+                            {{result.notebook.original_url}}
+                        </a>
+                    </h5>
+                </div>
+
+                <div id="collapse{{result.id}}" class="collapse" role="tabpanel"  aria-labelledby="heading{{result.id}}">
+                    <div class="card-block">
+                        <h4>{{result.notebook.original_url}}</h3>
+                        <p><b>ID:</b> {{result.notebook.id}}</p>
+                        <p><b>Kernel:</b> {{result.notebook.kernel}}</p>
+                        <p><b>Notebook URL:</b> <a target="_blank" href="{{result.notebook.original_url}}">Notebook URL</a></p>
+                        <p><b>Output URL:</b> <a target="_blank" href="/static/uploads/{{result.notebook.id}}.ipynb.html">Output URL</a></p>
+                        <p>
+                            {% if result.notebook.is_failed %}
+                            <b style="color:red"> Failed:  True </b> {% else %}
+                            <b style="color:green"> Failed:  False </b> {% endif %}
+                        </p>
+                        <div class="logs">
+                            {% for log in result.logs %}
+                            <p>[{{log.date_created}}]:{{log.message}}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+
+</html>
