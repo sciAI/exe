@@ -5,6 +5,7 @@ In order to use sci.AI EXE you need:
 - Ubuntu 14.04 or newer
 - Apache2 with WSGI module
 - Supervisor
+- virtualenv
 
 1 Clone repository
 
