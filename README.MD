@@ -1,3 +1,27 @@
+# Introduction
+
+[exe.sci.AI](http://exe.sci.ai/) is a validator of the research code executability. Submit link to the full text paper to find Jupyter notebook and execute it automatically. Application will report result whether notebook executes successfully or fails due to the error. 
+
+
+```
+Analysis report
+1 List of papers
+
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5322252/
+2 Results
+
+2.1 Paper: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5322252/
+2.1.1 Notebook: http://nbviewer.jupyter.org/github/biocore/qiime/blob/1.9.1/examples/ipynb/illumina_overview_tutorial.ipynb
+
+Failed
+False
+Message
+Successfully processed
+
+```
+
+Implementation is inspired by https://github.com/sparcopen/open-research-doathon/issues/25 conversation and chatting with @Daniel-Mietchen. 
+
 # Installation
 
 ## Prerequisites
