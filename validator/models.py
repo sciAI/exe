@@ -464,7 +464,7 @@ class Notebook(db.Document):
             notebook_content = Notebook.clear_outputs(notebook_content)
             # get kernel name
             kernel_name = notebook_content['metadata']['kernelspec']['name']
-            status, tmp_log = install_dependencies(
+            status, installation_log = install_dependencies(
                 str(notebook_content),
                 kernel_name
             )
@@ -473,7 +473,7 @@ class Notebook(db.Document):
                 self.list_id,
                 self.paper_id,
                 self.get_id(),
-                'Install dependencies log: {0}'.format(tmp_log)
+                'Install dependencies log: {0}'.format(installation_log)
             )
 
             ep = ExecutePreprocessor(
