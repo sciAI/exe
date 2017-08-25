@@ -1,11 +1,37 @@
 # Installation
 
+## Prerequisites
+
 In order to use sci.AI EXE you need:
-- MongoDB
-- Ubuntu 14.04 or newer
-- Apache2 with WSGI module
-- Supervisor
-- virtualenv
+
+1 Ubuntu 14.04 or newer
+
+2 Mongo DB 3.0+
+
+3 Apache2 with WSGI module
+
+```
+sudo apt-get update
+sudo apt-get install apache2
+sudo apt-get install libapache2-mod-wsgi
+sudo service apache2 restart
+```
+
+4 Supervisor
+
+```
+sudo apt-get install supervisor
+sudo service supervisor restart
+```
+
+5 virtualenv
+
+```
+sudo apt-get install python-pip
+sudo pip install virtualenv
+```
+
+## Installation process
 
 1 Clone repository
 
