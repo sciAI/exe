@@ -8,21 +8,38 @@
     <body>
         <div class="main-block container centered-container">
             <div class="row">
+                
                 <div class="col-lg-6 offset-lg-3 mt-4 mb-4">
-                    <h1 class="mb-4">Check executability of the research paper code</h1>
+                    <h5 class="mb-4 text-center">Check executability of the research paper code</h5>
                     <form class="main-form" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <textarea class="form-control" placeholder="Paper's URL/DOI or link to the notebook (enter next paper from the next line)"
-                                id="text" name="text" rows="4"></textarea>
-                        </div>
-                        <div class="form-group {% if error %}has-danger{% else %}has-success{% endif %}">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs nav-center" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#upload-text" role="tab">Upload text</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#upload-file" role="tab">Upload file</a>
+                            </li>
+                        </ul>
 
-                            <label class="custom-file">
-                        <input type="file" name="file" id="file" class="custom-file-input">
-                        <span class="custom-file-control" data-content="or upload list of papers in .csv/.txt format"></span>
-                    </label>
+                        <!-- Tab panes -->
+                        <div class="tab-content p-4">
+                            <div class="tab-pane active" id="upload-text" role="tabpanel">
+                                <div class="form-group">
+                                    <textarea class="form-control" placeholder="Paper's URL/DOI or link to the notebook (enter next paper from the next line)"
+                                        id="text" name="text" rows="4"></textarea>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="upload-file" role="tabpanel">
+                                <label class="custom-file">
+                                    <input type="file" name="file" id="file" class="custom-file-input">
+                                    <span class="custom-file-control" data-content="Upload list of papers in .csv/.txt format"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group text-center {% if error %}has-danger{% else %}has-success{% endif %}">
                             <button type="submit" class="btn btn-primary mt-4">Run test</button>
-                            <div class="form-control-feedback">{{error}}</div>
+                            <div class="mt-2 form-control-feedback">{{error}}</div>
                         </div>
                     </form>
                 </div>
@@ -30,7 +47,7 @@
         </div>
         <div class="logs-block container-fluid mb-4">
             <div class="row">
-                <h1 class="mt-4 mb-4">Processing logs</h1>
+                <h5 class="mt-4 mb-4">Processing logs</h5>
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>

@@ -1,9 +1,15 @@
+textarea.form-control,
+.custom-file-control,
+.custom-file-control::before,
+button.btn {
+    border-radius: 0;
+}
+
 .centered-container {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    text-align: center;
 }
 
 .custom-file-control {
@@ -16,6 +22,7 @@
 .custom-file-control:after {
     content: attr(data-content);
 }
+
 
 .btn,
 .custom-file-input {
@@ -35,6 +42,40 @@
 #accordion .logs {
     font-size: 12px;
 }
+
+/* Bootstrap updates */
+.nav-tabs {
+    border-bottom: none;
+}
+
+.nav-center {
+    justify-content: center;
+}
+
+.nav-link {
+    color: #aaa;
+}
+.nav-link:hover {
+    color: #333;
+}
+
+.tab-content {
+    margin: -1px;
+    border: 1px solid #aaa;
+}
+
+.main-form .nav-link.active,
+.main-form .nav-link:hover {
+    border-color: #aaa;
+    border-bottom-color: transparent;
+    border-radius: 0;
+}
+
+.main-form textarea,
+.main-form .custom-file-control {
+    border-color: #aaa;
+}
+
 
 
 /* Logs */
