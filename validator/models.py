@@ -454,7 +454,7 @@ class Notebook(db.Document):
             )
 
             ep = ExecutePreprocessor(
-                timeout=60,
+                timeout=3600,
                 kernel_name=kernel_name
             )
             ep.preprocess(
@@ -496,11 +496,11 @@ class Notebook(db.Document):
                     'Start writing HTML output to file'
                 )
                 html_exporter = HTMLExporter()
-                html_exporter.template_file = 'basic'
+                html_exporter.template_file = 'full' # 'basic'
                 (body, resources) = html_exporter.from_notebook_node(notebook_content)
                 f = open(self.output_html_path, 'w')
-                rendered_template = render_without_request('output.html', body=body)
-                f.write(rendered_template.encode('utf-8'))
+                # rendered_template = render_without_request('output.html', body=body)
+                f.write(body.encode('utf-8')) # f.write(rendered_template.encode('utf-8'))
                 f.close()
                 with io.open(self.output_path, mode='wt', encoding='utf-8') as f:
                     nbformat.write(notebook_content, f)
