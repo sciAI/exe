@@ -10,43 +10,63 @@
 <body>
     <div class="container mt-4 mb-4">
         {% if not results.papers %}
-            <h1 style="color:red;">Wrong results code</h1>
+            <h2 style="color:red;">Wrong results code</h2>
         {% else %}
-            <h1 class="mb-4">Report</h1>
-            <h3>List of papers</h3>
-            <ul>
+            <h2>Analysis report</h2>
+            <h3 class="mt-4 mb-4">1 List of papers</h3>
+            <ul style="list-style:none;">
             {% for paper in results.papers %}
                 <li>{{paper.paper_url}}</li>
             {% endfor %}
             </ul>
-            <h3>Results of analysis</h3>
+            <h3 class="mt-4 mb-4">2 Results</h3>
             {% for paper in results.papers %}
-                <h4>Paper: {{paper.paper_url}}</h4>
-                {% if paper.url_type == 'doi' %}
-                    <h6>URL: <a target="_blank" href="https://dx.doi.org/{{paper.paper_url}}">Paper URL</a> ({{paper.url_type}})</h6>
-                {% else %}
-                    <h6>URL: <a target="_blank" href="{{paper.paper_url}}">Paper URL</a> ({{paper.url_type}})</h6>
-                {% endif %}
+                {% set paperloop = loop %}
+                <h4 class="mb-4 mt-4">2.{{loop.index}} Paper: {{paper.paper_url}}</h4>
+                <dl class="row">
+                    <dt class="col-sm-3">Paper URL</dt>
+                    <dd class="col-sm-9">
+                         {% if paper.url_type == 'doi' %}
+                            <a target="_blank" href="https://dx.doi.org/{{paper.paper_url}}">Paper URL</a> 
+                        {% else %}
+                        <a target="_blank" href="{{paper.paper_url}}">Paper URL</a> 
+                        {% endif %} 
+                        ({{paper.url_type}})
+                    </dd>
+                </dl>
+
                 {% if not paper.notebooks %}
-                <p>No notebooks was found for this paper</p>
+                    <p>No notebooks was found for this paper</p>
                 {% else %}
-                {% for notebook in paper.notebooks %}
-                <p><b>Notebook URL:</b> <a target="_blank" href="{{notebook.original_url}}">Notebook URL</a></p>
-                <p><b>Output URL:</b> <a target="_blank" href="/static/uploads/{{notebook.id}}.ipynb.html">Output URL</a></p>
-                <p>
-                    {% if notebook.is_failed %}
-                        <b style="color:red"> Failed:  True </b>
-                    {% else %} 
-                        <b style="color:green"> Failed:  False </b>
-                    {% endif %}
-                </p>
-                <p>
-                    <b>Message:</b>
-                    <br>
-                    {{notebook.message|safe}}
-                </p>
-                <hr>
-                {% endfor %}
+                    {% for notebook in paper.notebooks %}
+                    <h5 class="mb-4 mt-4">2.{{ paperloop.index }}.{{loop.index}} Notebook: {{notebook.url}}</h5>
+                    <dl class="row">
+                        <dt class="col-sm-3">Notebook URL</dt>
+                        <dd class="col-sm-9">
+                            <a target="_blank" href="{{notebook.original_url}}">Notebook URL</a>
+                        </dd>
+
+                        <dt class="col-sm-3">Output URL</dt>
+                        <dd class="col-sm-9">
+                            <a target="_blank" href="/static/uploads/{{notebook.id}}.ipynb.html">Output URL</a>
+                        </dd>
+
+                        <dt class="col-sm-3">Failed</dt>
+                        <dd class="col-sm-9">
+                             {% if notebook.is_failed %}
+                            <b style="color:red"> True </b> 
+                            {% else %}
+                            <b style="color:green"> False </b> 
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-3">Message</dt>
+                        <dd class="col-sm-9">
+                             {{notebook.message|safe}}
+                        </dd>
+                    </dl>
+                    <hr>
+                    {% endfor %}
                 {% endif %}
             {% endfor %}
         {% endif %}
