@@ -1,3 +1,20 @@
+# sci.AI EXE
+# Copyright(C) 2017 sci.AI
+
+# This program is free software: you can redistribute it and / or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY
+# without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see < http: // www.gnu.org / licenses / >.
+
 """
     App routes
 """
@@ -62,7 +79,7 @@ def check_results():
             if not task:
                 return jsonify({'error': 'No task with specified ID: {0}'.format(task_id)}), \
                     200, {'ContentType': 'application/json'}
-            return jsonify({'warning': 'Your list of URLs still in queue. Processing can take some time, please, be patient. Log will be updated in 30 seconds.'}), \
+            return jsonify({'warning': 'Your list is still in the queue. Processing can take some time, so please be patient. The log will be updated every 30 seconds.'}), \
                 200, {'ContentType': 'application/json'}
 
         # if still processing return logs

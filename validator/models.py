@@ -1,3 +1,20 @@
+# sci.AI EXE
+# Copyright(C) 2017 sci.AI
+
+# This program is free software: you can redistribute it and / or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY
+# without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see < http: // www.gnu.org / licenses / >.
+
 """
     App models
 """
@@ -496,11 +513,10 @@ class Notebook(db.Document):
                     'Start writing HTML output to file'
                 )
                 html_exporter = HTMLExporter()
-                html_exporter.template_file = 'full' # 'basic'
+                html_exporter.template_file = 'full'
                 (body, resources) = html_exporter.from_notebook_node(notebook_content)
                 f = open(self.output_html_path, 'w')
-                # rendered_template = render_without_request('output.html', body=body)
-                f.write(body.encode('utf-8')) # f.write(rendered_template.encode('utf-8'))
+                f.write(body.encode('utf-8'))
                 f.close()
                 with io.open(self.output_path, mode='wt', encoding='utf-8') as f:
                     nbformat.write(notebook_content, f)
