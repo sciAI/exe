@@ -182,4 +182,8 @@ And open in browser:
 http://YOUR_IP
 ```
 
-If everything is okay you will see form to upload new file.
+If everything is okay you will see form to upload new file:
+
+<p align="center">
+<img style="max-width:400px;" src="images/main-page.png">
+</p>
