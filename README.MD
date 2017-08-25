@@ -39,7 +39,7 @@ sudo pip install virtualenv
 git clone git@github.com:sciAI/exe.git
 ```
 
-2 Go to folder with repository content (jupyter-testing by default)
+2 Go to folder with repository content (exe by default)
 
 ```
 cd exe
