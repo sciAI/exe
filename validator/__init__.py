@@ -28,7 +28,7 @@ from rq import Queue
 import rq_dashboard
 
 from flask_mongoengine import MongoEngine
-from validator.devconfig import Configuration
+from validator.config import Configuration
 
 app = Flask(__name__)
 app.config.from_object(Configuration)
