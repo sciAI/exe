@@ -1,4 +1,4 @@
-# Introduction
+# exe.sci.AI
 
 [exe.sci.AI](http://exe.sci.ai/) is a validator of the research code executability. Submit link to the full text paper to find Jupyter notebook and execute it automatically. Application will report result whether notebook executes successfully or fails due to the error. 
 
@@ -6,9 +6,9 @@
 
 Implementation is inspired by https://github.com/sparcopen/open-research-doathon/issues/25 conversation and chatting with @Daniel-Mietchen. 
 
-# Installation
+## Getting Started
 
-## Prerequisites
+### Prerequisites
 
 In order to use sci.AI EXE you need:
 
@@ -39,7 +39,7 @@ sudo apt-get install python-pip
 sudo pip install virtualenv
 ```
 
-## Installation process
+### Installing
 
 1 Clone repository
 
@@ -195,3 +195,12 @@ If everything is okay you will see form to upload new file:
 <p align="center">
 <img style="max-width:400px;" src="images/main-page.png">
 </p>
+
+
+## Contributing
+
+To be added.
+
+## License
+
+This project is licensed under the AGPL-3.0 License - see the [LICENSE](LICENSE) file for details
